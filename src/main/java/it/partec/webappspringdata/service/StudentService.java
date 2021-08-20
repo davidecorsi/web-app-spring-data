@@ -11,6 +11,7 @@ import it.partec.webappspringdata.dto.StudentDto;
 import it.partec.webappspringdata.exception.StudentException;
 import it.partec.webappspringdata.model.Student;
 import it.partec.webappspringdata.repository.ClassRepository;
+import it.partec.webappspringdata.repository.StudentCustomRepository;
 import it.partec.webappspringdata.repository.StudentRepository;
 
 @Service
@@ -21,6 +22,9 @@ public class StudentService {
 	
 	@Autowired
 	private ClassRepository classRepository;
+	
+	@Autowired
+	private StudentCustomRepository studentCustomRepository;
 
 	@Transactional(readOnly = true)
 	public List<StudentDto> getListStudent() throws Exception {
@@ -90,5 +94,26 @@ public class StudentService {
 			e.printStackTrace();
 			throw new StudentException(e);
 		}
+	}
+
+	@Transactional(readOnly = true)
+	public List<StudentDto> searchStudent(StudentDto studentDto) throws Exception {
+		List<StudentDto> studentDtoList = new ArrayList<>();
+		try {
+			List<Student> studentList = studentCustomRepository.searchStudent(studentDto);
+			for(Student s: studentList) {
+				StudentDto createStudentDto = new StudentDto();
+				createStudentDto.setId(s.getId());
+				createStudentDto.setName(s.getName());
+				createStudentDto.setSurname(s.getSurname());
+				createStudentDto.setAge(s.getAge());
+				createStudentDto.setClassName(s.getClasse().getName());
+				studentDtoList.add(createStudentDto);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new StudentException(e);
+		}
+		return studentDtoList;
 	}
 }
