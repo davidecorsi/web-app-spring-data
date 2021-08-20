@@ -2,6 +2,9 @@ package it.partec.webappspringdata.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,6 +121,25 @@ public class StudentService {
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
-	public void updateStudent(StudentDto studentDto) {
+	public void updateStudent(StudentDto studentDto) throws Exception {
+		try {
+			Class classe = classRepository.findByName(studentDto.getClassName());
+			Student student = studentRepository.getById(studentDto.getId());
+			if(classe == null) {
+				classe = new Class();
+				classe.setName(studentDto.getClassName());
+				classRepository.save(classe);
+			}
+			student.setName(studentDto.getName());
+			student.setSurname(studentDto.getSurname());
+			student.setAge(studentDto.getAge());
+			student.setClasse(classe);
+			studentRepository.save(student);
+		} catch(EntityNotFoundException e) {
+			throw e;
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new StudentException(e);
+		}
 	}
 }
