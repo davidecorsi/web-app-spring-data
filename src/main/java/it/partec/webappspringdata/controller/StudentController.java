@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dto.StudentDto;
+import it.partec.webappspringdata.dto.StudentDto;
 import it.partec.webappspringdata.model.Student;
 import it.partec.webappspringdata.service.StudentService;
 

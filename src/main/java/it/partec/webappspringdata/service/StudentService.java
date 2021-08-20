@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.partec.webappspringdata.model.Class;
-import dto.StudentDto;
+import it.partec.webappspringdata.dto.StudentDto;
 import it.partec.webappspringdata.exception.StudentException;
 import it.partec.webappspringdata.model.Student;
 import it.partec.webappspringdata.repository.ClassRepository;

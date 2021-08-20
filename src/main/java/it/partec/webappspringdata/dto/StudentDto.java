@@ -1,4 +1,4 @@
-package dto;
+package it.partec.webappspringdata.dto;
 
 import java.io.Serializable;
 
