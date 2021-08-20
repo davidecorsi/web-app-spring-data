@@ -116,4 +116,8 @@ public class StudentService {
 		}
 		return studentDtoList;
 	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void updateStudent(StudentDto studentDto) {
+	}
 }
