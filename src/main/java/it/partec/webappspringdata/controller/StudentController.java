@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.partec.webappspringdata.dto.StudentDto;
-import it.partec.webappspringdata.model.Student;
 import it.partec.webappspringdata.service.StudentService;
 
 
@@ -93,11 +91,5 @@ public class StudentController {
 	
 	@PutMapping
 	public ResponseEntity<Object> updateStudent(@RequestBody StudentDto studentDto) {
-		try {
-			studentService.updateStudent(studentDto);
-		} catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
