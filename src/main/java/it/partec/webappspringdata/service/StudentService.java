@@ -60,6 +60,8 @@ public class StudentService {
 			studentDto.setSurname(student.getSurname());
 			studentDto.setAge(student.getAge());
 			studentDto.setClassName(student.getClasse().getName());
+		} catch(EntityNotFoundException e) {
+			return null;
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new StudentException(e);
