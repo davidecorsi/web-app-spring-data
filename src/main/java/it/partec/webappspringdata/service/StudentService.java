@@ -1,13 +1,20 @@
 package it.partec.webappspringdata.service;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.partec.webappspringdata.model.Class;
 import it.partec.webappspringdata.dto.StudentDto;
@@ -19,15 +26,21 @@ import it.partec.webappspringdata.repository.StudentRepository;
 
 @Service
 public class StudentService {
-	
+
 	@Autowired
 	private StudentRepository studentRepository;
-	
+
 	@Autowired
 	private ClassRepository classRepository;
-	
+
 	@Autowired
 	private StudentCustomRepository studentCustomRepository;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Value("${volume.path}")
+	private String volumePath;
 
 	@Transactional(readOnly = true)
 	public List<StudentDto> getListStudent() throws Exception {
@@ -43,13 +56,21 @@ public class StudentService {
 				studentDto.setClassName(s.getClasse().getName());
 				studentDtoList.add(studentDto);
 			}
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			try(BufferedWriter bwt = new BufferedWriter(new FileWriter(volumePath + "/" + now))) {
+				bwt.write("GET LIST");
+				bwt.newLine();
+				bwt.write(objectMapper.writeValueAsString(studentList));
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new StudentException(e);
 		}
 		return studentDtoList;
 	}
-	
+
 	@Transactional(readOnly = true)
 	public StudentDto getStudent(long id) throws Exception {
 		StudentDto studentDto = new StudentDto();
@@ -60,6 +81,14 @@ public class StudentService {
 			studentDto.setSurname(student.getSurname());
 			studentDto.setAge(student.getAge());
 			studentDto.setClassName(student.getClasse().getName());
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			try(BufferedWriter bwt = new BufferedWriter(new FileWriter(volumePath + "/" + now))) {
+				bwt.write("GET");
+				bwt.newLine();
+				bwt.write(objectMapper.writeValueAsString(studentDto));
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		} catch(EntityNotFoundException e) {
 			return null;
 		} catch(Exception e) {
@@ -68,7 +97,7 @@ public class StudentService {
 		}
 		return studentDto;
 	}
-	
+
 	@Transactional(rollbackFor = Exception.class)
 	public void addStudent(StudentDto studentDto) throws Exception {
 		try {
@@ -85,16 +114,32 @@ public class StudentService {
 			student.setAge(studentDto.getAge());
 			student.setClasse(classe);
 			studentRepository.save(student);
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			try(BufferedWriter bwt = new BufferedWriter(new FileWriter(volumePath + "/" + now))) {
+				bwt.write("POST");
+				bwt.newLine();
+				bwt.write(objectMapper.writeValueAsString(studentDto));
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new StudentException(e);
 		}
 	}
-	
+
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteStudent(long id) throws Exception{
 		try {
 			studentRepository.deleteById(id);
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			try(BufferedWriter bwt = new BufferedWriter(new FileWriter(volumePath + "/" + now))) {
+				bwt.write("DELETE");
+				bwt.newLine();
+				bwt.write(objectMapper.writeValueAsString(id));
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new StudentException(e);
@@ -121,7 +166,7 @@ public class StudentService {
 		}
 		return studentDtoList;
 	}
-	
+
 	@Transactional(rollbackFor = Exception.class)
 	public void updateStudent(StudentDto studentDto) throws Exception {
 		try {
@@ -137,6 +182,14 @@ public class StudentService {
 			student.setAge(studentDto.getAge());
 			student.setClasse(classe);
 			studentRepository.save(student);
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			try(BufferedWriter bwt = new BufferedWriter(new FileWriter(volumePath + "/" + now))) {
+				bwt.write("PUT");
+				bwt.newLine();
+				bwt.write(objectMapper.writeValueAsString(studentDto));
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		} catch(EntityNotFoundException e) {
 			throw e;
 		} catch(Exception e) {
