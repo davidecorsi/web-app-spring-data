@@ -122,6 +122,6 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
-	public void updateStudent(StudentDto studentDto) {
+	public void updateStudent(long id, StudentDto studentDto) {
 	}
 }

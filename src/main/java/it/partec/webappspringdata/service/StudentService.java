@@ -11,5 +11,5 @@ public interface StudentService {
 	public void addStudent(StudentDto studentDto) throws Exception;
 	public void deleteStudent(long id) throws Exception;
 	public List<StudentDto> searchStudent(StudentDto studentDto) throws Exception;
-	public void updateStudent(StudentDto studentDto);
+	public void updateStudent(long id, StudentDto studentDto);
 }
