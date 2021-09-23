@@ -2,6 +2,8 @@ package it.partec.webappspringdata.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +58,7 @@ public class StudentController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> addStudent(@RequestBody StudentDto studentDto) throws Exception {
+	public ResponseEntity<Object> addStudent(@Valid @RequestBody StudentDto studentDto) throws Exception {
 		studentService.addStudent(studentDto);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
@@ -68,7 +70,7 @@ public class StudentController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> updateStudent(@PathVariable("id") long id, @RequestBody StudentDto studentDto) throws Exception {
+	public ResponseEntity<Object> updateStudent(@PathVariable("id") long id, @Valid @RequestBody StudentDto studentDto) throws Exception {
 		studentService.updateStudent(id, studentDto);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

@@ -2,12 +2,25 @@ package it.partec.webappspringdata.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
+import org.hibernate.validator.constraints.Length;
+
 public class StudentDto implements Serializable {
 	
 	private Long id;
+	
+	@Length(min = 3, max = 20, message = "il campo name deve essere compreso tra 3 e 20")
 	private String name;
+	
+	@Length(min = 3, max = 20, message = "il campo surname deve essere compreso tra 3 e 20")
 	private String surname;
+	
+	@Positive(message = "il campo age deve essere un numero positivo")
 	private Long age;
+	
+	@NotBlank(message = "il campo className non deve essere vuoto")
 	private String className;
 	
 	public Long getId() {

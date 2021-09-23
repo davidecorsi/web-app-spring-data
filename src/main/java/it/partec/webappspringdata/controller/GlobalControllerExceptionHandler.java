@@ -1,5 +1,6 @@
 package it.partec.webappspringdata.controller;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,7 +11,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 
 import it.partec.webappspringdata.dto.Errore;
-
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletException;
 
@@ -62,7 +62,13 @@ public class GlobalControllerExceptionHandler {
 		e.printStackTrace();
 		return new Errore("404", "ERRORE NELLA RICHIESTA");
 	}
-
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public Errore handleValidationExceptions(MethodArgumentNotValidException e) {
+	    return new Errore("400", "BAD REQUEST");
+	}
+	
 	@ExceptionHandler(value = { EntityNotFoundException.class, EmptyResultDataAccessException.class })
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Errore entityNotFoundException(Exception e) {
