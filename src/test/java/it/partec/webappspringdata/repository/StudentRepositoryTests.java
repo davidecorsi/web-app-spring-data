@@ -3,6 +3,7 @@ package it.partec.webappspringdata.repository;
 import javax.persistence.EntityNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class StudentRepositoryTests {
 	@Test
 	void getByIdTest() {
 		Student student = studentRepository.getById(1L);
-		assertAll(() -> student.getName());
+		assertDoesNotThrow(() -> student.getName());
 	}
 	
 	@Test
