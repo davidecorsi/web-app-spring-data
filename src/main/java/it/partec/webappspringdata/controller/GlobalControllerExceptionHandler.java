@@ -11,12 +11,18 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 
 import it.partec.webappspringdata.dto.Errore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletException;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
@@ -65,8 +71,14 @@ public class GlobalControllerExceptionHandler {
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public Errore handleValidationExceptions(MethodArgumentNotValidException e) {
-	    return new Errore("400", "BAD REQUEST");
+	public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException e) {
+		Map<String, String> errors = new HashMap<>();
+		for(ObjectError error: e.getBindingResult().getAllErrors()) {
+			String fieldName = ((FieldError) error).getField();
+	        String errorMessage = error.getDefaultMessage();
+	        errors.put(fieldName, errorMessage);
+		}
+	    return errors;
 	}
 	
 	@ExceptionHandler(value = { EntityNotFoundException.class, EmptyResultDataAccessException.class })
